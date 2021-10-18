@@ -8,6 +8,9 @@
 - React library to alows the user to swipe through pages of data.
 - Best for creating tabs, images slider, fullPage scrolling and more.
 
+![](https://github.com/alabsi91/react-js-pager/blob/7e3c63795a1811435049ca16fd5ec2b1e4077212/slider.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/998e4662d6ea1719cafa6c3beda13f2b2671a971/fullpage.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/7e3c63795a1811435049ca16fd5ec2b1e4077212/tabs.gif)
 ## Installation
 
 `npm install react-js-pager`
