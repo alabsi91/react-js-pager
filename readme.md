@@ -6,13 +6,14 @@
 ![NPM](https://img.shields.io/npm/l/react-js-pager)
 
 - React library to alows the user to swipe through pages of data.
-- Best for creating tabs, images slider, fullPage scrolling and more.
+- Best for creating tabs, image slider, fullPage scrolling and more.
 
-![](https://github.com/alabsi91/react-js-pager/blob/7e3c63795a1811435049ca16fd5ec2b1e4077212/tabs.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/acc8280db39c4bf3c856d49168608cb17e0d1d22/tab.gif)
 
-![](https://github.com/alabsi91/react-js-pager/blob/998e4662d6ea1719cafa6c3beda13f2b2671a971/fullpage.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/7ee278d5ed09eed494c402146d8c125cd9f75f9f/fullpage.gif)
 
-![](https://github.com/alabsi91/react-js-pager/blob/7e3c63795a1811435049ca16fd5ec2b1e4077212/slider.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/5194d39618ead7d6cad790f0e8ba9621afa3f810/slider.gif)
+
 ## Installation
 
 `npm install react-js-pager`
@@ -27,15 +28,15 @@ export default function App() {
   let pagerMethods = null;
 
   const next_page_handle = () => {
-    pagerMethods.next();
+    if (pagerMethods !== null) pagerMethods.next();
   };
 
   const previous_page_handle = () => {
-    pagerMethods.previous();
+    if (pagerMethods !== null) pagerMethods.previous();
   };
 
   const choose_page_handle = pageIndex => {
-    pagerMethods.setPage(pageIndex);
+    if (pagerMethods !== null) pagerMethods.setPage(pageIndex);
   };
 
   return (
@@ -60,7 +61,7 @@ export default function App() {
 ### orientation : _['horizontal' | 'vertical'] [optional]_
 
 - Set `horizontal` or `vertical` scrolling orientation.
-- If set to `vertical` make sure to provide a height in `wrapperStyle` otherwise height will be set to `50vh`.
+- If set to `vertical` make sure to provide a height value in `wrapperStyle` otherwise height will be set to `50vh`.
 - **Default Value** `horizontal`
 
 ### initialPage : _[Number] [optional]_
@@ -71,12 +72,12 @@ export default function App() {
 ### loop : _[Boolean] [optional]_
 
 - Loop scrolling between pages.
-- **Note:** Loop doesn't work for touch swipe scrolling.
+- **Note:** Loop scrolling doesn't work for touch swipe/drag scrolling.
 - **Default Value** `false`
 
 ### touchGestures : _[Boolean] [optional]_
 
-- Enable/Disable swipe gesture for touch screens.
+- Enable/Disable swipe/drag gestures for touch screens.
 - **Default Value** `true`
 
 ### wrapperStyle : _[Object] [optional]_
@@ -91,7 +92,7 @@ export default function App() {
 
 ### wheelScrollWithAnimation : _[Boolean] [optional]_
 
-- Wither to use animation when changing pages with mouse scroll wheel.
+- Wither to use animations when changing pages with mouse scroll wheel.
 - **Default Value** `true`
 
 ### showScrollbar : _[Boolean] [optional]_
@@ -102,12 +103,12 @@ export default function App() {
 ### animationStyle : _['opacity' | 'scroll' | 'scale' | 'scaleX' | 'scaleY'] [optional]_
 
 - Changing page animation style.
-- **Note:** touch gestures always uses `scroll` animation style.
+- **Note:** touch swipe/drag gestures always uses `scroll` animation style.
 - **Default Value** `scroll`
 
 ### duration : _[Number] [optional]_
 
-- Changing page animation duration.
+- Changing page animation duration in ms.
 - **Default Value** `300`
 
 ### ease : _[String | Function] [optional]_
@@ -127,7 +128,7 @@ function easeInQuad(x) {
 
 ### onAnimation : _[ `(event: Object) => void` ] [optional]_
 
-- This callback will be called every time animation frame changes, including touch swipes.
+- This callback will be called every time animation frame changes, including touch swipe/drag.
 
 |      Event props      |                        Description                        |  Type   |
 | :-------------------: | :-------------------------------------------------------: | :-----: |
@@ -138,13 +139,13 @@ function easeInQuad(x) {
 
 ### onPageSelected : _[ `(selectedPageIndex: Number, previousPageIndex: Number) => void` ] [optional]_
 
-- This callback will be called once the Pager finishes navigating to the selected page.
+- This callback will be called once the pager finishes navigating to the selected page.
 
-### onPagerScroll : _[ `(event: Object) => void ] [optional]_
+### onPagerScroll : _[ `(event: Object) => void` ] [optional]_
 
 - Executed when transitioning between pages (ether because the animation for the requested page has changed or when the user is
   swiping/dragging between pages).
-- This is usefull for animating pages/tabs/slides indicator.
+- This is usefull for animating pages/tabs/slides indicators.
 
 |    Event props     |                                     Description                                      |  Type  |
 | :----------------: | :----------------------------------------------------------------------------------: | :----: |
@@ -170,3 +171,22 @@ function easeInQuad(x) {
 
 - Navigate to a specific page.
 - Takes a number param (pageIndex) and a boolean param to enable/disable animation.
+
+## Limitation
+
+**horizontal orientation**
+
+- Pager wrapper element height can't matches the viewed page height.
+- Pager wrapper element height will match the heighest page you have.
+- Even if you specify the pager height style to be shorter than the heighest page a scrollbar will show up.
+
+**vertical orientation**
+
+- Pager wrapper element width can't matches the viewed page width.
+- Pager wrapper element width will match the widest page you have.
+- Even if you specify the pager width style to be shorter than the widest page a scrollbar will show up.
+
+<br />
+
+- If necessary, you can workaround this by setting pages height/width programmatically with `overflow: 'hidden'` every time the
+  page changes.
