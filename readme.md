@@ -170,17 +170,17 @@ function easeInQuad(x) {
 
 ## Methods
 
-### next : `(withAnimation?: Boolean) => void`
+### next : (withAnimation?: Boolean) => void
 
 - Navigate to the next page.
 - Takes a boolean param to enable/disable animation.
 
-### previous : `(withAnimation?: Boolean) => void`
+### previous : (withAnimation?: Boolean) => void
 
 - Navigate to the previous page.
 - Takes a boolean param to enable/disable animation.
 
-### setPage : `(pageIndex: Number, withAnimation?: Boolean) => void`
+### setPage : (pageIndex: Number, withAnimation?: Boolean) => void
 
 - Navigate to a specific page index.
 - Takes a number param (pageIndex) and a boolean param to enable/disable animation.
@@ -193,3 +193,5 @@ function easeInQuad(x) {
   have.
 - Even if you specify the pager (`height` / `width`) style to be shorter than the highest/widest page, a scrollbar will show up.
 - If necessary, you can workaround this by setting pages (`height` / `width`) programmatically with `overflow: 'hidden'` every time the page changes.
+
+![](https://github.com/alabsi91/react-js-pager/blob/43b5a1d17b14a8c9d02e7749f08d9d51724f7bdd/limitation.png)
