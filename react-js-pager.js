@@ -52,7 +52,7 @@ const Pager = forwardRef((props, ref) => {
       withAnimation = withAnimation ?? true;
       pos.current = pagerRef.current[orientation === 'vertical' ? 'scrollTop' : 'scrollLeft'];
 
-      const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl';
+      const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl' && orientation !== 'vertical';
       const lastPage = currentPageRef.current ?? 0;
       const pagerSize = parseInt(window.getComputedStyle(pagerRef.current)[orientation === 'vertical' ? 'height' : 'width']);
       const currentPos = pagerRef.current[orientation === 'vertical' ? 'scrollTop' : 'scrollLeft'];
@@ -160,7 +160,7 @@ const Pager = forwardRef((props, ref) => {
     const touchX = e.changedTouches[0].pageX;
     const touchY = e.changedTouches[0].pageY;
 
-    const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl';
+    const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl' && orientation !== 'vertical';
     const lastPage = currentPageRef.current;
     const size = parseInt(window.getComputedStyle(pagerRef.current)[orientation === 'vertical' ? 'height' : 'width']);
     const moving_distance = orientation === 'vertical' ? touchY - y.current : touchX - x.current;
@@ -176,7 +176,7 @@ const Pager = forwardRef((props, ref) => {
         moving_direction === 'negative')
     ) {
       const page = isRtl ? currentPageRef.current - 1 : currentPageRef.current + 1;
-      if (page > pagerRef.current.children.length - 1) return;
+      if ((!isRtl && page > pagerRef.current.children.length - 1) || (isRtl && page < 0)) return;
       requestNum(
         { from: [pos.current - moving_distance, 0], to: [pos.current + size, 1], duration, easingFunction: 'easeOutExpo' },
         (s, a) => {
@@ -195,7 +195,7 @@ const Pager = forwardRef((props, ref) => {
         moving_direction === 'positive')
     ) {
       const page = isRtl ? currentPageRef.current + 1 : currentPageRef.current - 1;
-      if (page < 0) return;
+      if ((!isRtl && page < 0) || (isRtl && page > pagerRef.current.children.length - 1)) return;
       requestNum(
         { from: [pos.current - moving_distance, 0], to: [pos.current - size, 1], duration, easingFunction: 'easeOutExpo' },
         (s, a) => {
@@ -325,7 +325,7 @@ const Pager = forwardRef((props, ref) => {
   const wheelHandle = e => (e.deltaY > 0 ? next(wheelScrollAnimation) : previous(wheelScrollAnimation));
 
   const onScrollHandle = event => {
-    const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl';
+    const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl' && orientation !== 'vertical';
 
     const pagerHeight = parseInt(window.getComputedStyle(pagerRef.current).height);
     const pagerWidth = parseInt(window.getComputedStyle(pagerRef.current).width);
