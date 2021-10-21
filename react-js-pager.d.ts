@@ -3,24 +3,44 @@ type requestFrameEasing = "linear" | "easeInSine" | "easeOutSine" | "easeInOutSi
 
 interface onPagerScrollProps {
     /**
-     * - Pager scrolled length percentage relative to the first page, a value between (0 - 1).
+     * - Pager scrolled length percentage on the X axis, a value between (0 - 1).
      */
-    scrollPercentage?: Number
+    percentageX?: Number
 
     /**
-     * - Pager starting scrolling position.
+     * - Pager scrolled length percentage on the Y axis, a value between (0 - 1).
      */
-    startingPos?: Number
+    percentageY?: Number
 
     /**
-     * - Pager current scrolling position.
+     * - Pager current scrolling position on the X axis.
      */
-    currentPos?: Number
+    scrollX?: Number
 
     /**
-     * - Pager scrolling width/height depends on pager orientation.
+     * - Pager current scrolling position on the Y axis.
      */
-    scrollLength?: Number
+    scrollY?: Number
+
+    /**
+     * - Pager scroll width in px.
+     */
+    scrollWidth?: Number
+
+    /**
+     * - Pager scroll height in px.
+     */
+    scrollHeight?: Number
+
+    /**
+     * - Pager computed width in px.
+     */
+    pagerWidth?: Number
+
+    /**
+     * - Pager computed height in px.
+     */
+    pagerHeight?: Number
 
     /**
      * - Pager onscroll native event.

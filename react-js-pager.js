@@ -253,10 +253,12 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   const onTouchEnd = e => {
     isSwipe.current = null;
     if (isCanceled.current) return;
+    const touchX = e.changedTouches[0].pageX;
+    const touchY = e.changedTouches[0].pageY;
     const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl';
     const lastPage = currentPageRef.current;
     const size = parseInt(window.getComputedStyle(pagerRef.current)[orientation === 'vertical' ? 'height' : 'width']);
-    const moving_distance = orientation === 'vertical' ? e.changedTouches[0].pageY - y.current : e.changedTouches[0].pageX - x.current;
+    const moving_distance = orientation === 'vertical' ? touchY - y.current : touchX - x.current;
     const moving_direction = moving_distance < 0 ? 'negative' : 'positive';
     const moving_time = Date.now() - t.current;
     const duration = 300;
@@ -341,8 +343,10 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
   const onTouchMove = e => {
     if (e.cancelable) e.preventDefault();
-    const horizontal_distance = Math.abs(e.changedTouches[0].pageX - x.current);
-    const verical_destance = Math.abs(e.changedTouches[0].pageY - y.current);
+    const touchX = e.targetTouches[0].pageX;
+    const touchY = e.targetTouches[0].pageY;
+    const horizontal_distance = Math.abs(touchX - x.current);
+    const verical_destance = Math.abs(touchY - y.current);
     isSwipe.current = isSwipe.current === true ? true : orientation === 'vertical' ? verical_destance > swipe_direction_distance : horizontal_distance > swipe_direction_distance;
 
     if ((orientation === 'vertical' ? horizontal_distance > swipe_direction_distance : verical_destance > swipe_direction_distance) && !isSwipe.current) {
@@ -356,7 +360,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       return;
     }
 
-    let moveTo = pos.current - (orientation === 'vertical' ? e.targetTouches[0].pageY - y.current : e.targetTouches[0].pageX - x.current);
+    let moveTo = pos.current - (orientation === 'vertical' ? touchY - y.current : touchX - x.current);
     pagerRef.current.scrollTo(orientation === 'vertical' ? {
       top: moveTo
     } : {
@@ -365,12 +369,16 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   };
 
   const onTouchStart = e => {
+    const touchX = e.targetTouches[0].pageX;
+    const touchY = e.targetTouches[0].pageY;
     isCanceled.current = false;
-    x.current = e.targetTouches[0].pageX;
-    y.current = e.targetTouches[0].pageY;
+    x.current = touchX;
+    y.current = touchY;
     pos.current = pagerRef.current[orientation === 'vertical' ? 'scrollTop' : 'scrollLeft'];
     t.current = Date.now();
-    pagerRef.current.addEventListener('touchmove', onTouchMove);
+    pagerRef.current.addEventListener('touchmove', onTouchMove, {
+      passive: false
+    });
   };
 
   const onChildrenChange = (0, _react.useCallback)(() => {
@@ -426,17 +434,23 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     var _props$onPagerScroll;
 
     const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl';
-    const pagerSize = parseInt(window.getComputedStyle(pagerRef.current)[orientation === 'vertical' ? 'height' : 'width']);
-    const startingPos = pos.current;
-    const currentPos = pagerRef.current[orientation === 'vertical' ? 'scrollTop' : 'scrollLeft'];
-    const scrollLength = pagerRef.current[orientation === 'vertical' ? 'scrollHeight' : 'scrollWidth']; // const pagePercent = (100 * (currentPos - startingPos)) / pagerSize;
-
-    const scrollPercentage = isRtl ? -(currentPos / (scrollLength - pagerSize)) : currentPos / (scrollLength - pagerSize);
+    const pagerHeight = parseInt(window.getComputedStyle(pagerRef.current).height);
+    const pagerWidth = parseInt(window.getComputedStyle(pagerRef.current).width);
+    const scrollX = pagerRef.current.scrollLeft;
+    const scrollY = pagerRef.current.scrollTop;
+    const scrollHeight = pagerRef.current.scrollHeight;
+    const scrollWidth = pagerRef.current.scrollWidth;
+    const percentageX = isRtl ? -(scrollX / (scrollWidth - pagerWidth)) : scrollX / (scrollWidth - pagerWidth);
+    const percentageY = isRtl ? -(scrollY / (scrollHeight - pagerHeight)) : scrollY / (scrollHeight - pagerHeight);
     (_props$onPagerScroll = props.onPagerScroll) === null || _props$onPagerScroll === void 0 ? void 0 : _props$onPagerScroll.call(props, {
-      scrollPercentage,
-      startingPos,
-      currentPos,
-      scrollLength,
+      percentageX,
+      percentageY,
+      scrollX,
+      scrollY,
+      scrollHeight,
+      scrollWidth,
+      pagerWidth,
+      pagerHeight,
       event
     });
   };
