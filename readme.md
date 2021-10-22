@@ -13,7 +13,7 @@
 
 ![](https://github.com/alabsi91/react-js-pager/blob/7ee278d5ed09eed494c402146d8c125cd9f75f9f/fullpage.gif)
 
-![](https://github.com/alabsi91/react-js-pager/blob/5194d39618ead7d6cad790f0e8ba9621afa3f810/slider.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/c3319c05e7c7618d16808c94ec8ab4395c622099/slider2.gif)
 
 ## Installation
 
@@ -108,7 +108,7 @@ export default function App() {
 - Wither to show or hide pager scrollbar.
 - **Default Value** `false`
 
-### animationStyle : _[ 'opacity' | 'scroll' | 'scale' | 'scaleX' | 'scaleY' ] [optional]_
+### animationStyle : _[ 'opacity' | 'scroll' | 'scale' | 'scaleX' | 'scaleY' | 'rotateX' | 'rotateY' ] [optional]_
 
 - Animation style when navigating through pages.
 - **Note:** touch swipe/drag gestures always uses `scroll` animation style.

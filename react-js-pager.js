@@ -10,6 +10,8 @@ const Pager = forwardRef((props, ref) => {
   const pos = useRef();
   const isSwipe = useRef();
   const isCanceled = useRef();
+  const scrollWidthTmp = useRef();
+  const scrollHeightTmp = useRef();
 
   const initialPage = props.initialPage ?? 0;
   const orientation = props.orientation ?? 'horizontal'; // 'vertical'
@@ -47,10 +49,12 @@ const Pager = forwardRef((props, ref) => {
   const swipe_direction_distance = 10;
 
   const changePage = useCallback(
-    (page, withAnimation) => {
+    (page, withAnimation, type) => {
       page = page ?? props.initialPage;
       withAnimation = withAnimation ?? true;
       pos.current = pagerRef.current[orientation === 'vertical' ? 'scrollTop' : 'scrollLeft'];
+      scrollHeightTmp.current = pagerRef.current.scrollHeight;
+      scrollWidthTmp.current = pagerRef.current.scrollWidth;
 
       const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl' && orientation !== 'vertical';
       const lastPage = currentPageRef.current ?? 0;
@@ -102,6 +106,38 @@ const Pager = forwardRef((props, ref) => {
             if (children?.[page]) children[page].style.transform = `scaleY(${s})`;
             onAnimation?.({ animationPercentage: s, selectedPageIndex: page, previousPageIndex: lastPage, touchSwipe: false });
             if (s === 1) onPageSelected?.(page, lastPage);
+          });
+        } else if (withAnimation && animationStyle === 'rotateY') {
+          requestNum({ from: [0, 0], to: [180, 1], duration, easingFunction }, (r, o) => {
+            if (children?.[lastPage] && r <= 90)
+              children[lastPage].style.transform = `perspective(500px) rotateY(${type === 'previous' ? -r : r}deg)`;
+            if (r >= 90 && pagerRef.current[orientation === 'vertical' ? 'scrollTop' : 'scrollLeft'] !== nextPos) {
+              pagerRef.current.scrollTo(orientation === 'vertical' ? { top: nextPos } : { left: nextPos });
+              if (children?.[lastPage]) children[lastPage].style.removeProperty('transform');
+            }
+            if (children?.[page] && r >= 90)
+              children[page].style.transform = `perspective(500px) rotateY(${type === 'previous' ? -r : r}deg) scaleX(-1)`;
+            onAnimation?.({ animationPercentage: o, selectedPageIndex: page, previousPageIndex: lastPage, touchSwipe: false });
+            if (o === 1) {
+              onPageSelected?.(page, lastPage);
+              if (children?.[page]) children[page].style.removeProperty('transform');
+            }
+          });
+        } else if (withAnimation && animationStyle === 'rotateX') {
+          requestNum({ from: [0, 0], to: [180, 1], duration, easingFunction }, (r, o) => {
+            if (children?.[lastPage] && r <= 90)
+              children[lastPage].style.transform = `perspective(500px) rotateX(${type === 'previous' ? -r : r}deg)`;
+            if (r >= 90 && pagerRef.current[orientation === 'vertical' ? 'scrollTop' : 'scrollLeft'] !== nextPos) {
+              pagerRef.current.scrollTo(orientation === 'vertical' ? { top: nextPos } : { left: nextPos });
+              if (children?.[lastPage]) children[lastPage].style.removeProperty('transform');
+            }
+            if (children?.[page] && r >= 90)
+              children[page].style.transform = `perspective(500px) rotateX(${type === 'previous' ? -r : r}deg) scaleY(-1)`;
+            onAnimation?.({ animationPercentage: o, selectedPageIndex: page, previousPageIndex: lastPage, touchSwipe: false });
+            if (o === 1) {
+              onPageSelected?.(page, lastPage);
+              if (children?.[page]) children[page].style.removeProperty('transform');
+            }
           });
         } else {
           pagerRef.current.scrollTo(orientation === 'vertical' ? { top: nextPos } : { left: nextPos });
@@ -314,9 +350,13 @@ const Pager = forwardRef((props, ref) => {
     if (loop) {
       const pagesCount = pagerRef.current.children.length - 1;
       const page = currentPageRef.current - 1 < 0 ? pagesCount : currentPageRef.current - 1;
-      changePage(page, withAnimation);
+      changePage(page, withAnimation, 'previous');
     } else {
-      changePage(Math.min(Math.max(currentPageRef.current - 1, 0), pagerRef.current.children.length - 1), withAnimation);
+      changePage(
+        Math.min(Math.max(currentPageRef.current - 1, 0), pagerRef.current.children.length - 1),
+        withAnimation,
+        'previous'
+      );
     }
   };
 
@@ -335,8 +375,12 @@ const Pager = forwardRef((props, ref) => {
     const scrollHeight = pagerRef.current.scrollHeight;
     const scrollWidth = pagerRef.current.scrollWidth;
 
-    const percentageX = isRtl ? -(scrollX / (scrollWidth - pagerWidth)) : scrollX / (scrollWidth - pagerWidth);
-    const percentageY = isRtl ? -(scrollY / (scrollHeight - pagerHeight)) : scrollY / (scrollHeight - pagerHeight);
+    const percentageX = isRtl
+      ? -(scrollX / (scrollWidthTmp.current - pagerWidth))
+      : scrollX / (scrollWidthTmp.current - pagerWidth);
+    const percentageY = isRtl
+      ? -(scrollY / (scrollHeightTmp.current - pagerHeight))
+      : scrollY / (scrollHeightTmp.current - pagerHeight);
 
     props.onPagerScroll?.({
       percentageX,
