@@ -1,6 +1,6 @@
 {
   "name": "react-js-pager",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "React library to alows users to navigate through pages of data.",
   "main": "react-js-pager.js",
   "scripts": {
