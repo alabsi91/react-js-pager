@@ -108,11 +108,16 @@ export default function App() {
 - Wither to show or hide pager scrollbar.
 - **Default Value** `false`
 
-### animationStyle : _[ 'opacity' | 'scroll' | 'scale' | 'scaleX' | 'scaleY' | 'rotateX' | 'rotateY' ] [optional]_
+### animationStyle : _[ 'blur' | 'opacity' | 'scroll' | 'scale' | 'scaleX' | 'scaleY' | 'rotateX' | 'rotateY' ] [optional]_
 
 - Animation style when navigating through pages.
 - **Note:** touch swipe/drag gestures always uses `scroll` animation style.
 - **Default Value** `scroll`
+
+### perspective : _[Number] [optional]_
+
+- 3d transform perspective value used only for `rotateX` and `rotateY` animation style.
+- **Default Value** `1000`
 
 ### duration : _[Number] [optional]_
 
@@ -192,11 +197,11 @@ function easeInQuad(x) {
 ## Limitation
 
 - `height` in case of `horizontal` orientation, `width` in case of `vertical` orientation.
-- The limitation only apply if you have different pages heights/widths.
-- The (`height` / `width`) of Pager wrapper element does not match the viewed page, it will match the highest/widest page you
-  have.
-- Even if you specify the pager (`height` / `width`) style to be shorter than the highest/widest page, a scrollbar will show up.
-- If necessary, you can workaround this by setting pages (`height` / `width`) programmatically with `overflow: 'hidden'` every
-  time the page changes.
+  - The limitation only apply if you have different pages heights/widths.
+  - The (`height` / `width`) of Pager wrapper element does not match the viewed page, it will match the highest/widest page you
+    have.
+  - Even if you specify the pager (`height` / `width`) style to be shorter than the highest/widest page, a scrollbar will show up.
+  - If necessary, you can workaround this by setting pages (`height` / `width`) programmatically with `overflow: 'hidden'` every
+    time the page changes.
 
 ![](https://github.com/alabsi91/react-js-pager/blob/43b5a1d17b14a8c9d02e7749f08d9d51724f7bdd/limitation.png)

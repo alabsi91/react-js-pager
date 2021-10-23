@@ -123,7 +123,13 @@ interface PagerProps {
      * - **Note:** touch gestures always uses `scroll` animation style.
      * - **Default Value** `scroll`
      */
-    animationStyle?: 'opacity' | 'scroll' | 'scale' | 'scaleX' | 'scaleY' | 'rotateX' | 'rotateY'
+    animationStyle?: 'blur' | 'opacity' | 'scroll' | 'scale' | 'scaleX' | 'scaleY' | 'rotateX' | 'rotateY'
+
+    /**
+     * - 3d transform perspective value used only for `rotateX` and `rotateY` animation style.
+     * - **Default Value** `1000`
+     */
+    perspective?: Number
 
     /**
      * - Changing page animation duration.
