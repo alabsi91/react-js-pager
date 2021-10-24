@@ -450,7 +450,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       const borderBottomWidth = parseFloat(window.getComputedStyle(children[i]).borderBottomWidth);
       children[i].style.minHeight = pagerHeight - (paddingTop + paddingBottom + marginTop + marginBottom + borderTopWidth + borderBottomWidth) + 'px';
     }
-  }; // wait a little bit of time to change pages size on the first render, I'm not sure way this is a thing should i do to make it work.
+  }; // wait a little bit of time to change pages size on the first render, some css styles take time to apply like 'aspect-ratio'
 
 
   const adjustSize = async () => {
@@ -625,7 +625,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
   const onChildrenChange = (0, _react.useCallback)(() => {
     setChildren(props.children, () => adjustSize()); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.children]); // wait a little bit of time to set initial page the first render, I'm not sure way this is a thing should i do to make it work.
+  }, [props.children]); // wait a little bit of time to set initial page the first render, waiting for adjustSize to be done.
 
   const setInitialPage = async () => {
     await wait(100);
@@ -634,7 +634,9 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
   (0, _react.useLayoutEffect)(() => {
     if (isFirstRender) {
+      orientation === 'vertical' ? adjustHeight() : adjustWidth();
       window.addEventListener('resize', onResizeHandle);
+      changePage(initialPage, false);
       setInitialPage(); // navigate to initialPage index prop.
 
       setIsFirstRender(false);
