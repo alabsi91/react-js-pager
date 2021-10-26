@@ -58,6 +58,7 @@ const Pager = forwardRef((props, ref) => {
      * @param {'previous' | 'next'} type Detrmine navigation direction used for 'rotate' animation style.
      */
     (page, withAnimation, type) => {
+      if (!pagerRef.current) return;
       isResizing.current = false; // used to cancle 'rotate' animation style when browser window size is changing
       page = page ?? props.initialPage; // use initialPage index props if param is not given.
       withAnimation = withAnimation ?? true; // use animation if withAnimation param is not given.
@@ -231,6 +232,7 @@ const Pager = forwardRef((props, ref) => {
 
   // change every page width to fit the page wrapper element (orientation === 'horizontal')
   const adjustWidth = () => {
+    if (!pagerRef.current) return;
     const children = pagerRef.current.children;
     const pagerWidth = parseFloat(window.getComputedStyle(pagerRef.current).width);
     for (let i = 0; i < children.length; i++) {
@@ -247,6 +249,7 @@ const Pager = forwardRef((props, ref) => {
 
   // change every page height to fit the page wrapper element (orientation === 'vertical').
   const adjustHeight = () => {
+    if (!pagerRef.current) return;
     const children = pagerRef.current.children;
     const pagerHeight = parseFloat(window.getComputedStyle(pagerRef.current).height);
     for (let i = 0; i < children.length; i++) {
