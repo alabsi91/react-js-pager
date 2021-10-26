@@ -101,6 +101,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   (page, withAnimation, type) => {
     var _page, _withAnimation, _currentPageRef$curre;
 
+    if (!pagerRef.current) return;
     isResizing.current = false; // used to cancle 'rotate' animation style when browser window size is changing
 
     page = (_page = page) !== null && _page !== void 0 ? _page : props.initialPage; // use initialPage index props if param is not given.
@@ -422,6 +423,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
 
   const adjustWidth = () => {
+    if (!pagerRef.current) return;
     const children = pagerRef.current.children;
     const pagerWidth = parseFloat(window.getComputedStyle(pagerRef.current).width);
 
@@ -438,6 +440,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
 
   const adjustHeight = () => {
+    if (!pagerRef.current) return;
     const children = pagerRef.current.children;
     const pagerHeight = parseFloat(window.getComputedStyle(pagerRef.current).height);
 
