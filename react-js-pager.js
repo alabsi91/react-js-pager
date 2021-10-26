@@ -14,20 +14,87 @@ const Pager = forwardRef((props, ref) => {
   const scrollHeightTmp = useRef(); // save scroll height temporary to be use for onScrollEvent
   const isResizing = useRef(false); // if browser window size is changing used to cancle animation and onScrollEvent
   const isMounted = useRef(true); // use to cancle all animtions on unmount.
+
   // props
   const initialPage = props.initialPage ?? 0;
+  if (typeof initialPage !== 'number' || initialPage < 0) console.error('react-js-pager: props.initialPage has invalid value.');
+
   const orientation = props.orientation ?? 'horizontal'; // 'vertical'
+  if (orientation !== 'horizontal' && orientation !== 'vertical')
+    console.error('react-js-pager: props.orientation has invalid value.');
+
   const touchGestures = props.touchGestures ?? true;
+  if (typeof touchGestures !== 'boolean') console.error('react-js-pager: props.touchGestures has invalid value.');
+
   const wheelScroll = props.wheelScroll ?? true;
+  if (typeof wheelScroll !== 'boolean') console.error('react-js-pager: props.wheelScroll has invalid value.');
+
   const wheelScrollAnimation = props.wheelScrollWithAnimation ?? true;
-  const animationStyle = props.animationStyle ?? 'scroll'; // 'opacity', 'scale', 'scaleX', 'scaleY'
+  if (typeof wheelScrollAnimation !== 'boolean')
+    console.error('react-js-pager: props.wheelScrollWithAnimation has invalid value.');
+
+  const animationStyle = props.animationStyle ?? 'scroll'; // 'opacity', 'scale', 'scaleX', 'scaleY', 'rotateX', 'rotateY', blur
+  if (!new Set(['scroll', 'opacity', 'scale', 'scaleX', 'scaleY', 'rotateX', 'rotateY', 'blur']).has(animationStyle))
+    console.error('react-js-pager: props.animationStyle has invalid value.');
+
   const perspective = props.perspective ?? 500;
+  if (typeof perspective !== 'number') console.error('react-js-pager: props.perspective has invalid value.');
+
   const duration = props.duration ?? 300;
+  if (typeof duration !== 'number' || duration < 0) console.error('react-js-pager: props.duration has invalid value.');
+
   const loop = props.loop ?? false;
+  if (typeof loop !== 'boolean') console.error('react-js-pager: props.loop has invalid value.');
+
   const showScrollbar = props.showScrollbar ?? false;
+  if (typeof showScrollbar !== 'boolean') console.error('react-js-pager: props.showScrollbar has invalid value.');
+
   const easingFunction = props.ease ?? 'easeOutExpo';
+  if (
+    (!new Set([
+      'linear',
+      'easeInSine',
+      'easeOutSine',
+      'easeInOutSine',
+      'easeInQuad',
+      'easeOutQuad',
+      'easeInOutQuad',
+      'easeInCubic',
+      'easeOutCubic',
+      'easeInOutCubic',
+      'easeInQuart',
+      'easeOutQuart',
+      'easeInOutQuart',
+      'easeInQuint',
+      'easeOutQuint',
+      'easeInOutQuint',
+      'easeInExpo',
+      'easeOutExpo',
+      'easeInOutExpo',
+      'easeInCirc',
+      'easeOutCirc',
+      'easeInOutCirc',
+      'easeInBack',
+      'easeOutBack',
+      'easeInOutBack',
+      'easeInElastic',
+      'easeOutElastic',
+      'easeInOutElastic',
+      'easeInBounce',
+      'easeOutBounce',
+      'easeInOutBounce',
+    ]).has(easingFunction) &&
+      typeof easingFunction === 'string') ||
+    (typeof easingFunction !== 'string' && typeof easingFunction !== 'function')
+  )
+    console.error('react-js-pager: props.ease has invalid value.');
+
   const onPageSelected = props.onPageSelected;
+  if (onPageSelected && typeof onPageSelected !== 'function')
+    console.error('react-js-pager: props.onPageSelected has invalid value.');
+
   const onAnimation = props.onAnimation;
+  if (onAnimation && typeof onAnimation !== 'function') console.error('react-js-pager: props.onAnimation has invalid value.');
 
   const wrapperStyle = {
     ...(orientation === 'vertical' ? { height: '50vh' } : null),
