@@ -54,33 +54,20 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   // props
 
   const initialPage = (_props$initialPage = props.initialPage) !== null && _props$initialPage !== void 0 ? _props$initialPage : 0;
-  if (typeof initialPage !== 'number' || initialPage < 0) console.error('react-js-pager: props.initialPage has invalid value.');
   const orientation = (_props$orientation = props.orientation) !== null && _props$orientation !== void 0 ? _props$orientation : 'horizontal'; // 'vertical'
 
-  if (orientation !== 'horizontal' && orientation !== 'vertical') console.error('react-js-pager: props.orientation has invalid value.');
   const touchGestures = (_props$touchGestures = props.touchGestures) !== null && _props$touchGestures !== void 0 ? _props$touchGestures : true;
-  if (typeof touchGestures !== 'boolean') console.error('react-js-pager: props.touchGestures has invalid value.');
   const wheelScroll = (_props$wheelScroll = props.wheelScroll) !== null && _props$wheelScroll !== void 0 ? _props$wheelScroll : true;
-  if (typeof wheelScroll !== 'boolean') console.error('react-js-pager: props.wheelScroll has invalid value.');
   const wheelScrollAnimation = (_props$wheelScrollWit = props.wheelScrollWithAnimation) !== null && _props$wheelScrollWit !== void 0 ? _props$wheelScrollWit : true;
-  if (typeof wheelScrollAnimation !== 'boolean') console.error('react-js-pager: props.wheelScrollWithAnimation has invalid value.');
   const animationStyle = (_props$animationStyle = props.animationStyle) !== null && _props$animationStyle !== void 0 ? _props$animationStyle : 'scroll'; // 'opacity', 'scale', 'scaleX', 'scaleY', 'rotateX', 'rotateY', blur
 
-  if (!new Set(['scroll', 'opacity', 'scale', 'scaleX', 'scaleY', 'rotateX', 'rotateY', 'blur']).has(animationStyle)) console.error('react-js-pager: props.animationStyle has invalid value.');
   const perspective = (_props$perspective = props.perspective) !== null && _props$perspective !== void 0 ? _props$perspective : 500;
-  if (typeof perspective !== 'number') console.error('react-js-pager: props.perspective has invalid value.');
   const duration = (_props$duration = props.duration) !== null && _props$duration !== void 0 ? _props$duration : 300;
-  if (typeof duration !== 'number' || duration < 0) console.error('react-js-pager: props.duration has invalid value.');
   const loop = (_props$loop = props.loop) !== null && _props$loop !== void 0 ? _props$loop : false;
-  if (typeof loop !== 'boolean') console.error('react-js-pager: props.loop has invalid value.');
   const showScrollbar = (_props$showScrollbar = props.showScrollbar) !== null && _props$showScrollbar !== void 0 ? _props$showScrollbar : false;
-  if (typeof showScrollbar !== 'boolean') console.error('react-js-pager: props.showScrollbar has invalid value.');
   const easingFunction = (_props$ease = props.ease) !== null && _props$ease !== void 0 ? _props$ease : 'easeOutExpo';
-  if (!new Set(['linear', 'easeInSine', 'easeOutSine', 'easeInOutSine', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad', 'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart', 'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint', 'easeInOutQuint', 'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc', 'easeInOutCirc', 'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic', 'easeInBounce', 'easeOutBounce', 'easeInOutBounce']).has(easingFunction) && typeof easingFunction === 'string' || typeof easingFunction !== 'string' && typeof easingFunction !== 'function') console.error('react-js-pager: props.ease has invalid value.');
   const onPageSelected = props.onPageSelected;
-  if (onPageSelected && typeof onPageSelected !== 'function') console.error('react-js-pager: props.onPageSelected has invalid value.');
   const onAnimation = props.onAnimation;
-  if (onAnimation && typeof onAnimation !== 'function') console.error('react-js-pager: props.onAnimation has invalid value.');
 
   const wrapperStyle = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, orientation === 'vertical' ? {
     height: '50vh'
@@ -95,6 +82,23 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     padding: '0px'
   });
 
+  const checkTypes = () => {
+    if (typeof initialPage !== 'number' || initialPage < 0) console.error('react-js-pager: props.initialPage has invalid value.');
+    if (orientation !== 'horizontal' && orientation !== 'vertical') console.error('react-js-pager: props.orientation has invalid value.');
+    if (typeof touchGestures !== 'boolean') console.error('react-js-pager: props.touchGestures has invalid value.');
+    if (typeof wheelScroll !== 'boolean') console.error('react-js-pager: props.wheelScroll has invalid value.');
+    if (typeof wheelScrollAnimation !== 'boolean') console.error('react-js-pager: props.wheelScrollWithAnimation has invalid value.');
+    if (!new Set(['scroll', 'opacity', 'scale', 'scaleX', 'scaleY', 'rotateX', 'rotateY', 'blur']).has(animationStyle)) console.error('react-js-pager: props.animationStyle has invalid value.');
+    if (typeof perspective !== 'number') console.error('react-js-pager: props.perspective has invalid value.');
+    if (typeof duration !== 'number' || duration < 0) console.error('react-js-pager: props.duration has invalid value.');
+    if (typeof loop !== 'boolean') console.error('react-js-pager: props.loop has invalid value.');
+    if (typeof showScrollbar !== 'boolean') console.error('react-js-pager: props.showScrollbar has invalid value.');
+    if (!new Set(['linear', 'easeInSine', 'easeOutSine', 'easeInOutSine', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad', 'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart', 'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint', 'easeInOutQuint', 'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc', 'easeInOutCirc', 'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic', 'easeInBounce', 'easeOutBounce', 'easeInOutBounce']).has(easingFunction) && typeof easingFunction === 'string' || typeof easingFunction !== 'string' && typeof easingFunction !== 'function') console.error('react-js-pager: props.ease has invalid value.');
+    if (onPageSelected && typeof onPageSelected !== 'function') console.error('react-js-pager: props.onPageSelected has invalid value.');
+    if (onAnimation && typeof onAnimation !== 'function') console.error('react-js-pager: props.onAnimation has invalid value.');
+  };
+
+  checkTypes();
   const [children, setChildren] = useStateCallback(props.children); // save childern in the state
 
   const [isFirstRender, setIsFirstRender] = (0, _react.useState)(true); // used to call methods on first mount
