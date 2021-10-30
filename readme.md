@@ -150,6 +150,15 @@ function easeInQuad(x) {
 |  `previousPageIndex`  | The page index that will be navigated from.               | Number  |
 |     `touchSwipe`      | Wither the animation is coming from a touch swipe or not. | Boolean |
 
+### onNavigationStart : _[ ( selectedPageIndex: Number, previousPageIndex: Number ) => void ] [optional]_
+
+- This callback will be called once the pager starts navigating to the selected page.
+
+|       Params        | Description                         |  Type  |
+| :-----------------: | ----------------------------------- | :----: |
+| `selectedPageIndex` | The page index that navigated to.   | Number |
+| `previousPageIndex` | The page index that navigated from. | Number |
+
 ### onPageSelected : _[ ( selectedPageIndex: Number, previousPageIndex: Number ) => void ] [optional]_
 
 - This callback will be called once the pager finishes navigating to the selected page.
