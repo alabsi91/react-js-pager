@@ -150,6 +150,11 @@ interface PagerProps {
     onAnimation?: (event: onAnimationProps) => void
 
     /**
+     * - This callback will be called once the Pager starts navigating to the selected page.
+     */
+    onNavigationStart?: (selectedPageIndex: Number, previousPageIndex: Number) => void
+
+    /**
      * - This callback will be called once the Pager finishes navigating to the selected page.
      */
     onPageSelected?: (selectedPageIndex: Number, previousPageIndex: Number) => void

@@ -66,6 +66,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   const loop = (_props$loop = props.loop) !== null && _props$loop !== void 0 ? _props$loop : false;
   const showScrollbar = (_props$showScrollbar = props.showScrollbar) !== null && _props$showScrollbar !== void 0 ? _props$showScrollbar : false;
   const easingFunction = (_props$ease = props.ease) !== null && _props$ease !== void 0 ? _props$ease : 'easeOutExpo';
+  const onNavigationStart = props.onNavigationStart;
   const onPageSelected = props.onPageSelected;
   const onAnimation = props.onAnimation;
 
@@ -96,6 +97,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     if (!new Set(['linear', 'easeInSine', 'easeOutSine', 'easeInOutSine', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad', 'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart', 'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint', 'easeInOutQuint', 'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc', 'easeInOutCirc', 'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic', 'easeInBounce', 'easeOutBounce', 'easeInOutBounce']).has(easingFunction) && typeof easingFunction === 'string' || typeof easingFunction !== 'string' && typeof easingFunction !== 'function') console.error('react-js-pager: props.ease has invalid value.');
     if (onPageSelected && typeof onPageSelected !== 'function') console.error('react-js-pager: props.onPageSelected has invalid value.');
     if (onAnimation && typeof onAnimation !== 'function') console.error('react-js-pager: props.onAnimation has invalid value.');
+    if (onNavigationStart && typeof onNavigationStart !== 'function') console.error('react-js-pager: props.onNavigationStart has invalid value.');
   };
 
   checkTypes();
@@ -157,7 +159,9 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
 
     if (navigateTo < maxScroll) {
+      onNavigationStart === null || onNavigationStart === void 0 ? void 0 : onNavigationStart(page, lastPage); // call onNavigationStrat prop
       // scroll animation style
+
       if (withAnimation && animationStyle === 'scroll') {
         (0, _requestAnimationNumber.requestNum)({
           from: [currentPos, 0],
@@ -434,7 +438,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
       currentPageRef.current = page; // set the current page index to the new page index.
     }
-  }, [animationStyle, duration, easingFunction, onAnimation, onPageSelected, orientation, perspective, props.initialPage]);
+  }, [animationStyle, duration, easingFunction, onAnimation, onNavigationStart, onPageSelected, orientation, perspective, props.initialPage]);
 
   const wait = time => new Promise(e => setTimeout(e, time)); // change every page width to fit the page wrapper element (orientation === 'horizontal')
 
@@ -480,15 +484,17 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
 
   const onResizeHandle = () => {
+    const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl' && orientation !== 'vertical'; // check if pager wrapper element has right to left direction style only if the orientation prop is set to 'horizontal'.
+
     isResizing.current = true;
     const page = currentPageRef.current;
     orientation === 'vertical' ? adjustHeight() : adjustWidth();
     const pagerSize = parseFloat(window.getComputedStyle(pagerRef.current)[orientation === 'vertical' ? 'height' : 'width']);
-    const nextPos = page * pagerSize;
+    const navigateTo = isRtl ? -(page * pagerSize) : page * pagerSize;
     pagerRef.current.scrollTo(orientation === 'vertical' ? {
-      top: nextPos
+      top: navigateTo
     } : {
-      left: nextPos
+      left: navigateTo
     });
   };
 
@@ -511,6 +517,8 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       const navigateTo = isRtl ? -(page * size) : page * size; // new page position depends on RTL.
 
       if (!isRtl && page > pagerRef.current.children.length - 1 || isRtl && page < 0) return; // exit if there is nothing to swipe to.
+
+      onNavigationStart === null || onNavigationStart === void 0 ? void 0 : onNavigationStart(page, lastPage); // call onNavigationStrat prop
       // animate
 
       (0, _requestAnimationNumber.requestNum)({
@@ -543,6 +551,8 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       const navigateTo = isRtl ? -(page * size) : page * size; // new page position depends on RTL.
 
       if (!isRtl && page < 0 || isRtl && page > pagerRef.current.children.length - 1) return; // exit if there is nothing to swipe to.
+
+      onNavigationStart === null || onNavigationStart === void 0 ? void 0 : onNavigationStart(page, lastPage); // call onNavigationStrat prop
       // animate
 
       (0, _requestAnimationNumber.requestNum)({
@@ -712,8 +722,8 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     const scrollY = pagerRef.current.scrollTop;
     const scrollHeight = pagerRef.current.scrollHeight;
     const scrollWidth = pagerRef.current.scrollWidth;
-    const percentageX = isRtl ? -(scrollX / (scrollWidthTmp.current - pagerWidth)) : scrollX / (scrollWidthTmp.current - pagerWidth);
-    const percentageY = isRtl ? -(scrollY / (scrollHeightTmp.current - pagerHeight)) : scrollY / (scrollHeightTmp.current - pagerHeight);
+    const percentageX = isRtl ? -(scrollX / (scrollWidthTmp.current - pagerWidth)) || 0 : scrollX / (scrollWidthTmp.current - pagerWidth) || 0;
+    const percentageY = isRtl ? -(scrollY / (scrollHeightTmp.current - pagerHeight)) || 0 : scrollY / (scrollHeightTmp.current - pagerHeight) || 0;
     if (!isResizing.current) (_props$onPagerScroll = props.onPagerScroll) === null || _props$onPagerScroll === void 0 ? void 0 : _props$onPagerScroll.call(props, {
       percentageX,
       percentageY,
