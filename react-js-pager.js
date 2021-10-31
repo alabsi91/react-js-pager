@@ -26,7 +26,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
-  var _props$initialPage, _props$orientation, _props$touchGestures, _props$wheelScroll, _props$wheelScrollWit, _props$animationStyle, _props$perspective, _props$duration, _props$loop, _props$showScrollbar, _props$ease;
+  var _props$initialPage, _props$orientation, _props$touchGestures, _props$wheelScroll, _props$wheelScrollWit, _props$animationStyle, _props$perspective, _props$duration, _props$loop, _props$showScrollbar, _props$ease, _props$adjustPagesSiz;
 
   const pagerRef = (0, _react.useRef)(); // pager wrapper element
 
@@ -51,6 +51,10 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   const isResizing = (0, _react.useRef)(false); // if browser window size is changing used to cancle animation and onScrollEvent
 
   const isMounted = (0, _react.useRef)(true); // use to cancle all animtions on unmount.
+
+  const resizeObserver = (0, _react.useRef)(); // resize event listiner for pager wrapper element.
+
+  const isAnimationRunning = (0, _react.useRef)(false); // used to stop resize event when the animation is still running to prevent unstabel behaviour.
   // props
 
   const initialPage = (_props$initialPage = props.initialPage) !== null && _props$initialPage !== void 0 ? _props$initialPage : 0;
@@ -69,6 +73,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   const onNavigationStart = props.onNavigationStart;
   const onPageSelected = props.onPageSelected;
   const onAnimation = props.onAnimation;
+  const adjustPagesSizes = (_props$adjustPagesSiz = props.adjustPagesSizes) !== null && _props$adjustPagesSiz !== void 0 ? _props$adjustPagesSiz : false;
 
   const wrapperStyle = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, orientation === 'vertical' ? {
     height: '50vh'
@@ -109,7 +114,37 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   const time_min = 75;
   const time_max = 300;
   const input_distance = 50;
-  const swipe_direction_distance = 10; //this method used to change pages except in the case of a touch swipe.
+  const swipe_direction_distance = 10; // adjust hidden pages width/height to match pager element wrapper width/height, to prevent unwanted scrollbar if the pages has different sizes.
+
+  const adjustHiddenPagesSize = (0, _react.useCallback)(() => {
+    const children = pagerRef.current.children;
+    const currentPage = currentPageRef.current;
+    const pagerSize = pagerRef.current[orientation === 'vertical' ? 'clientWidth' : 'clientHeight'];
+
+    for (let i = 0; i < children.length; i++) {
+      const element = children[i];
+      const paddingTop = parseFloat(window.getComputedStyle(element).paddingTop);
+      const paddingBottom = parseFloat(window.getComputedStyle(element).paddingBottom);
+      const marginTop = parseFloat(window.getComputedStyle(element).marginTop);
+      const marginBottom = parseFloat(window.getComputedStyle(element).marginBottom);
+      const borderTopWidth = parseFloat(window.getComputedStyle(element).borderTopWidth);
+      const borderBottomWidth = parseFloat(window.getComputedStyle(element).borderBottomWidth);
+      const paddingLeft = parseFloat(window.getComputedStyle(element).paddingLeft);
+      const paddingRight = parseFloat(window.getComputedStyle(element).paddingRight);
+      const marginLeft = parseFloat(window.getComputedStyle(element).marginLeft);
+      const marginRight = parseFloat(window.getComputedStyle(element).marginRight);
+      const borderLeftWidth = parseFloat(window.getComputedStyle(element).borderLeftWidth);
+      const borderRightWidth = parseFloat(window.getComputedStyle(element).borderRightWidth);
+
+      if (i !== currentPage) {
+        element.style[orientation === 'vertical' ? 'width' : 'height'] = pagerSize - (orientation === 'vertical' ? paddingLeft + paddingRight + borderLeftWidth + borderRightWidth + marginLeft + marginRight : paddingTop + paddingBottom + borderTopWidth + borderBottomWidth + marginTop + marginBottom) + 'px';
+        element.style[orientation === 'vertical' ? 'overflowX' : 'overflowY'] = 'hidden';
+      } else {
+        element.style.removeProperty(orientation === 'vertical' ? 'width' : 'height');
+        element.style.removeProperty(orientation === 'vertical' ? 'overflow-x' : 'overflow-y');
+      }
+    }
+  }, [orientation]); //this method used to change pages except in the case of a touch swipe.
 
   const changePage = (0, _react.useCallback)(
   /**
@@ -434,11 +469,23 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
         }); // scroll to the next page index
 
         onPageSelected === null || onPageSelected === void 0 ? void 0 : onPageSelected(page, lastPage); // call onPageSelected prop if exist after finishing navigation to the new page index.
-      }
+      } // update isAnimationRunning variable.
 
+
+      if (withAnimation) (0, _requestAnimationNumber.requestNum)({
+        to: 1,
+        duration,
+        easingFunction
+      }, s => {
+        if (!isMounted.current) return;
+        isAnimationRunning.current = true;
+        if (s === 1) isAnimationRunning.current = false;
+      });
       currentPageRef.current = page; // set the current page index to the new page index.
+
+      if (adjustPagesSizes) adjustHiddenPagesSize(); // adjust hidden pages sizes to match pager element wrapper.
     }
-  }, [animationStyle, duration, easingFunction, onAnimation, onNavigationStart, onPageSelected, orientation, perspective, props.initialPage]);
+  }, [adjustHiddenPagesSize, adjustPagesSizes, animationStyle, duration, easingFunction, onAnimation, onNavigationStart, onPageSelected, orientation, perspective, props.initialPage]);
 
   const wait = time => new Promise(e => setTimeout(e, time)); // change every page width to fit the page wrapper element (orientation === 'horizontal')
 
@@ -484,10 +531,12 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
 
   const onResizeHandle = () => {
+    if (!pagerRef.current || isAnimationRunning.current) return;
+    if (adjustPagesSizes) adjustHiddenPagesSize();
     const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl' && orientation !== 'vertical'; // check if pager wrapper element has right to left direction style only if the orientation prop is set to 'horizontal'.
 
-    isResizing.current = true;
     const page = currentPageRef.current;
+    isResizing.current = true;
     orientation === 'vertical' ? adjustHeight() : adjustWidth();
     const pagerSize = parseFloat(window.getComputedStyle(pagerRef.current)[orientation === 'vertical' ? 'height' : 'width']);
     const navigateTo = isRtl ? -(page * pagerSize) : page * pagerSize;
@@ -544,7 +593,8 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
         if (s === pos.current + size) onPageSelected === null || onPageSelected === void 0 ? void 0 : onPageSelected(page, lastPage); // call onPageSelected prop if exist after finishing navigation to the new page index.
       });
       currentPageRef.current = page; // set the current page index to the new page index.
-      // swipe to the left, (right in case of direction is right to left (rtl) and the orientation prop is 'horizontal')
+
+      if (adjustPagesSizes) adjustHiddenPagesSize(); // swipe to the left, (right in case of direction is right to left (rtl) and the orientation prop is 'horizontal')
     } else if (Math.abs(moving_distance) > size / 2 && moving_direction === 'positive' || moving_time > time_min && moving_time < time_max && Math.abs(moving_distance) > input_distance && moving_direction === 'positive') {
       const page = isRtl ? currentPageRef.current + 1 : currentPageRef.current - 1; // new page index depends on RTL.
 
@@ -578,7 +628,8 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
         if (s === pos.current - size) onPageSelected === null || onPageSelected === void 0 ? void 0 : onPageSelected(page, lastPage); // call onPageSelected prop if exist after finishing navigation to the new page index.
       });
       currentPageRef.current = page; // set the current page index to the new page index.
-      // not enough swipe, return to the current page.
+
+      if (adjustPagesSizes) adjustHiddenPagesSize(); // not enough swipe, return to the current page.
     } else {
       // animate
       (0, _requestAnimationNumber.requestNum)({
@@ -665,7 +716,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   (0, _react.useLayoutEffect)(() => {
     if (isFirstRender) {
       orientation === 'vertical' ? adjustHeight() : adjustWidth();
-      window.addEventListener('resize', onResizeHandle);
+      resizeObserver.current = new ResizeObserver(onResizeHandle).observe(pagerRef.current);
       changePage(initialPage, false);
       setInitialPage(); // navigate to initialPage index prop.
 
@@ -676,9 +727,11 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [changePage, onChildrenChange]);
   (0, _react.useEffect)(() => {
+    const pagerEl = pagerRef.current;
+    const pagerObserver = resizeObserver.current;
     return () => {
       isMounted.current = false;
-      window.removeEventListener('resize', onResizeHandle);
+      pagerObserver === null || pagerObserver === void 0 ? void 0 : pagerObserver.unobserve(pagerEl);
     }; // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
