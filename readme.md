@@ -139,6 +139,15 @@ function easeInQuad(x) {
 }
 ```
 
+### adjustPagesSizes : _[Boolean] [optional]_
+
+- If you have pages with different widths/heights depends on the `orientation` this may cause unwanted extra space for the smaller
+  pages.
+- Adjust unshowed pages width/height depends on the `orientation` to match page wrapper element width/height.
+- **Warning:** Don't use this if you have pages with specific widths/heights style, this method will overwirte theme.
+- Check [Limitation](#limitation) section.
+- **Default Value** `false`
+
 ### onAnimation : _[ ( event: Object ) => void ] [optional]_
 
 - This callback will be called every time animation frame changes, including touch swipe/drag gestures.
@@ -210,7 +219,6 @@ function easeInQuad(x) {
   - The (`height` / `width`) of Pager wrapper element does not match the viewed page, it will match the highest/widest page you
     have.
   - Even if you specify the pager (`height` / `width`) style to be shorter than the highest/widest page, a scrollbar will show up.
-  - If necessary, you can workaround this by setting pages (`height` / `width`) programmatically with `overflow: 'hidden'` every
-    time the page changes.
+  - If necessary, you can workaround this by setting [adjustPagesSizes](#adjustpagessizes--boolean-optional) prop to `true`.
 
 ![](https://github.com/alabsi91/react-js-pager/blob/43b5a1d17b14a8c9d02e7749f08d9d51724f7bdd/limitation.png)
