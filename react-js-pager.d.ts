@@ -178,6 +178,9 @@ interface PagerProps {
      */
     ref?: (node: PagerMethods) => void
 
+    className?: string | undefined
+
+    id?: string | undefined
 }
 
 interface PagerMethods {

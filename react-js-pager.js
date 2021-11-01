@@ -73,7 +73,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   const onNavigationStart = props.onNavigationStart;
   const onPageSelected = props.onPageSelected;
   const onAnimation = props.onAnimation;
-  const adjustPagesSizes = (_props$adjustPagesSiz = props.adjustPagesSizes) !== null && _props$adjustPagesSiz !== void 0 ? _props$adjustPagesSiz : false;
+  const adjustPagesSize = (_props$adjustPagesSiz = props.adjustPagesSize) !== null && _props$adjustPagesSiz !== void 0 ? _props$adjustPagesSiz : false;
 
   const wrapperStyle = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, orientation === 'vertical' ? {
     height: '50vh'
@@ -483,9 +483,9 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       });
       currentPageRef.current = page; // set the current page index to the new page index.
 
-      if (adjustPagesSizes) adjustHiddenPagesSize(); // adjust hidden pages sizes to match pager element wrapper.
+      if (adjustPagesSize) adjustHiddenPagesSize(); // adjust hidden pages sizes to match pager element wrapper.
     }
-  }, [adjustHiddenPagesSize, adjustPagesSizes, animationStyle, duration, easingFunction, onAnimation, onNavigationStart, onPageSelected, orientation, perspective, props.initialPage]);
+  }, [adjustHiddenPagesSize, adjustPagesSize, animationStyle, duration, easingFunction, onAnimation, onNavigationStart, onPageSelected, orientation, perspective, props.initialPage]);
 
   const wait = time => new Promise(e => setTimeout(e, time)); // change every page width to fit the page wrapper element (orientation === 'horizontal')
 
@@ -532,7 +532,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
   const onResizeHandle = () => {
     if (!pagerRef.current || isAnimationRunning.current) return;
-    if (adjustPagesSizes) adjustHiddenPagesSize();
+    if (adjustPagesSize) adjustHiddenPagesSize();
     const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl' && orientation !== 'vertical'; // check if pager wrapper element has right to left direction style only if the orientation prop is set to 'horizontal'.
 
     const page = currentPageRef.current;
@@ -594,7 +594,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       });
       currentPageRef.current = page; // set the current page index to the new page index.
 
-      if (adjustPagesSizes) adjustHiddenPagesSize(); // swipe to the left, (right in case of direction is right to left (rtl) and the orientation prop is 'horizontal')
+      if (adjustPagesSize) adjustHiddenPagesSize(); // swipe to the left, (right in case of direction is right to left (rtl) and the orientation prop is 'horizontal')
     } else if (Math.abs(moving_distance) > size / 2 && moving_direction === 'positive' || moving_time > time_min && moving_time < time_max && Math.abs(moving_distance) > input_distance && moving_direction === 'positive') {
       const page = isRtl ? currentPageRef.current + 1 : currentPageRef.current - 1; // new page index depends on RTL.
 
@@ -629,7 +629,7 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       });
       currentPageRef.current = page; // set the current page index to the new page index.
 
-      if (adjustPagesSizes) adjustHiddenPagesSize(); // not enough swipe, return to the current page.
+      if (adjustPagesSize) adjustHiddenPagesSize(); // not enough swipe, return to the current page.
     } else {
       // animate
       (0, _requestAnimationNumber.requestNum)({
@@ -796,7 +796,9 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     onTouchStart: touchGestures ? onTouchStart : null,
     onTouchEnd: touchGestures ? onTouchEnd : null,
     onWheel: wheelScroll ? wheelHandle : null,
-    onScroll: props.onPagerScroll ? onScrollHandle : null
+    onScroll: props.onPagerScroll ? onScrollHandle : null,
+    id: props.id,
+    className: props.className
   }, children);
 }); // custom react hook, I get it from Stack Overflow website.
 
