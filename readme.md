@@ -21,6 +21,9 @@
 
 ## Usage
 
+- For touch swipe stability, if you have a scrollable page make sure that the scrollbar shows on the Pager wrapper element not on
+  the HTML body.
+
 ```jsx
 //...
 import Pager from 'react-js-pager';
@@ -68,8 +71,9 @@ export default function App() {
 
 ### orientation : _[ 'horizontal' | 'vertical' ] [optional]_
 
-- Set `horizontal` or `vertical` scrolling orientation.
-- If set to `vertical` make sure to provide a `height` value in `wrapperStyle` otherwise it will be set to `50vh`.
+- Set `horizontal` or `vertical` pages arrangement orientation.
+- If you set it to `vertical` make sure to provide a `height` value in `wrapperStyle` prop otherwise it will be set to `50vh` by
+  default.
 - **Default Value** `horizontal`
 
 ### initialPage : _[Number] [optional]_
@@ -80,17 +84,18 @@ export default function App() {
 ### loop : _[Boolean] [optional]_
 
 - Loop scrolling between pages.
-- **Note:** Loop scrolling doesn't work for touch swipe/drag gestures.
+- **Note:** Loop scrolling does not work for touch swipe/drag gestures.
 - **Default Value** `false`
 
 ### touchGestures : _[Boolean] [optional]_
 
-- Enable/Disable swipe/drag gestures for touch screens.
+- Whether to enable or disable swipe/drag gestures for touch screens.
 - **Default Value** `true`
 
 ### wrapperStyle : _[Object] [optional]_
 
-- Pager wrapper element style.
+- Pager wrapper element inline style.
+- You can also use `id` or `className` attributes to add style from CSS StyleSheet.
 - **Note:** Pager wrapper element has a flex box style by default.
 
 ### wheelScroll : _[Boolean] [optional]_
@@ -100,12 +105,13 @@ export default function App() {
 
 ### wheelScrollWithAnimation : _[Boolean] [optional]_
 
-- Wither to use animations when changing pages with mouse scroll wheel or not.
+- Whether to use animation when changing pages with mouse scroll wheel or not.
 - **Default Value** `true`
 
 ### showScrollbar : _[Boolean] [optional]_
 
-- Wither to show or hide pager scrollbar.
+- Whether to show or hide Pager scrollbar.
+- Will show scrollbar on the bottom for `horizontal` orientation and on the left for `vertical` orientation.
 - **Default Value** `false`
 
 ### animationStyle : _[ 'blur' | 'opacity' | 'scroll' | 'scale' | 'scaleX' | 'scaleY' | 'rotateX' | 'rotateY' ] [optional]_
@@ -121,16 +127,14 @@ export default function App() {
 
 ### duration : _[Number] [optional]_
 
-- Navigate through pages animation duration in ms.
+- Navigation animation duration in ms.
 - **Default Value** `300`
 
 ### ease : _[ String | Function ] [optional]_
 
-- Navigate through pages animation transition timing function.
+- Navigation animation transition timing function.
+- Check [easings.net](https://easings.net/) to learn more.
 - **Default Value** `easeOutExpo`
-- Easing functions specify the rate of change of the number over time.
-- Avaliable Easing functions :
-  `"linear", "easeInSine", "easeOutSine", "easeInOutSine", "easeInQuad", "easeOutQuad", "easeInOutQuad", "easeInCubic", "easeOutCubic", "easeInOutCubic", "easeInQuart", "easeOutQuart", "easeInOutQuart", "easeInQuint", "easeOutQuint", "easeInOutQuint", "easeInExpo", "easeOutExpo", "easeInOutExpo", "easeInCirc", "easeOutCirc", "easeInOutCirc", "easeInBack", "easeOutBack", "easeInOutBack", "easeInElastic", "easeOutElastic", "easeInOutElastic", "easeInBounce", "easeOutBounce", "easeInOutBounce"`
 - If you want to provide your own timing-function make sure that the function takes one parameter and returns one value.
 
 ```javascript
@@ -139,12 +143,13 @@ function easeInQuad(x) {
 }
 ```
 
-### adjustPagesSizes : _[Boolean] [optional]_
+### adjustPagesSize : _[Boolean] [optional]_
 
-- If you have pages with different widths/heights depends on the `orientation` this may cause unwanted extra space for the smaller
-  pages.
-- Adjust unshowed pages width/height depends on the `orientation` to match page wrapper element width/height.
-- **Warning:** Don't use this if you have pages with specific widths/heights style, this method will overwirte theme.
+- If you have pages with different `width` / `height` (depending on the `orientation` prop) this may causes unwanted extra space
+  for the smaller pages.
+- This method will adjust the unshowed (hidden) pages `width` / `height` (depending on the `orientation` prop) to match Pager
+  wrapper element `width` / `height`.
+- **Warning:** Don't use this if you have pages with specific `width` / `height` style, this method will overwrite them.
 - Check [Limitation](#limitation) section.
 - **Default Value** `false`
 
@@ -152,25 +157,27 @@ function easeInQuad(x) {
 
 - This callback will be called every time animation frame changes, including touch swipe/drag gestures.
 
-|      Event props      | Description                                               |  Type   |
-| :-------------------: | --------------------------------------------------------- | :-----: |
-| `animationPercentage` | Animation progress percentage, a value between (0 - 1).   | Number  |
-|  `selectedPageIndex`  | The page index that will be navigated to.                 | Number  |
-|  `previousPageIndex`  | The page index that will be navigated from.               | Number  |
-|     `touchSwipe`      | Wither the animation is coming from a touch swipe or not. | Boolean |
+|      Event props      | Description                                                |  Type   |
+| :-------------------: | ---------------------------------------------------------- | :-----: |
+| `animationPercentage` | Animation progress percentage, a value between (0 - 1).    | Number  |
+|  `selectedPageIndex`  | The page index that will be navigated to.                  | Number  |
+|  `previousPageIndex`  | The page index that will be navigated from.                | Number  |
+|     `touchSwipe`      | Whether the animation is coming from a touch swipe or not. | Boolean |
 
 ### onNavigationStart : _[ ( selectedPageIndex: Number, previousPageIndex: Number ) => void ] [optional]_
 
 - This callback will be called once the pager starts navigating to the selected page.
+- **Note:** this callback will be called on the first render too.
 
-|       Params        | Description                         |  Type  |
-| :-----------------: | ----------------------------------- | :----: |
-| `selectedPageIndex` | The page index that navigated to.   | Number |
-| `previousPageIndex` | The page index that navigated from. | Number |
+|       Params        | Description                                 |  Type  |
+| :-----------------: | ------------------------------------------- | :----: |
+| `selectedPageIndex` | The page index that will be navigated to.   | Number |
+| `previousPageIndex` | The page index that will be navigated from. | Number |
 
 ### onPageSelected : _[ ( selectedPageIndex: Number, previousPageIndex: Number ) => void ] [optional]_
 
 - This callback will be called once the pager finishes navigating to the selected page.
+- **Note:** this callback will be called on the first render too.
 
 |       Params        | Description                         |  Type  |
 | :-----------------: | ----------------------------------- | :----: |
@@ -197,28 +204,29 @@ function easeInQuad(x) {
 
 ## Methods
 
-### next : ( withAnimation?: Boolean ) => void
+### next : ( withAnimation?: Boolean = true ) => void
 
 - Navigate to the next page.
 - Takes a boolean param to enable/disable animation.
 
-### previous : ( withAnimation?: Boolean ) => void
+### previous : ( withAnimation?: Boolean = true ) => void
 
 - Navigate to the previous page.
-- Takes a boolean param to enable/disable animation.
+- Takes a boolean param to enable/disable animation. 
 
-### setPage : ( pageIndex: Number, withAnimation?: Boolean ) => void
+### setPage : ( pageIndex: Number, withAnimation?: Boolean = true ) => void
 
 - Navigate to a specific page index.
 - Takes a number param (pageIndex) and a boolean param to enable/disable animation.
 
 ## Limitation
 
-- `height` in case of `horizontal` orientation, `width` in case of `vertical` orientation.
-  - The limitation only apply if you have different pages heights/widths.
-  - The (`height` / `width`) of Pager wrapper element does not match the viewed page, it will match the highest/widest page you
-    have.
-  - Even if you specify the pager (`height` / `width`) style to be shorter than the highest/widest page, a scrollbar will show up.
-  - If necessary, you can workaround this by setting [adjustPagesSizes](#adjustpagessizes--boolean-optional) prop to `true`.
+- The limitation only apply if you have different pages \*`dimensions` .
+- The \*`dimension` of the Pager wrapper element does not match the currently selected page \*`dimension`, it will match the
+  `highest` or `widest` page you have.
+- Even if you specify the Pager wrapper element \*`dimension` to be shorter than the `highest` or `widest` page, a scrollbar will
+  show up.
+- If necessary, you can workaround this by setting [adjustPagesSize](#adjustpagessize--boolean-optional) prop to `true`.
+- ( \* ) **dimension:** `height` in case of `horizontal` orientation, `width` in case of `vertical` orientation.
 
-![](https://github.com/alabsi91/react-js-pager/blob/43b5a1d17b14a8c9d02e7749f08d9d51724f7bdd/limitation.png)
+![](https://github.com/alabsi91/react-js-pager/blob/c8c35cc4d038bff94c7957c93f6ac556f5c44265/limitation.jpg)

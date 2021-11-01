@@ -32,7 +32,7 @@ const Pager = forwardRef((props, ref) => {
   const onNavigationStart = props.onNavigationStart;
   const onPageSelected = props.onPageSelected;
   const onAnimation = props.onAnimation;
-  const adjustPagesSizes = props.adjustPagesSizes ?? false;
+  const adjustPagesSize = props.adjustPagesSize ?? false;
 
   const wrapperStyle = {
     ...(orientation === 'vertical' ? { height: '50vh' } : null),
@@ -331,12 +331,12 @@ const Pager = forwardRef((props, ref) => {
           });
 
         currentPageRef.current = page; // set the current page index to the new page index.
-        if (adjustPagesSizes) adjustHiddenPagesSize(); // adjust hidden pages sizes to match pager element wrapper.
+        if (adjustPagesSize) adjustHiddenPagesSize(); // adjust hidden pages sizes to match pager element wrapper.
       }
     },
     [
       adjustHiddenPagesSize,
-      adjustPagesSizes,
+      adjustPagesSize,
       animationStyle,
       duration,
       easingFunction,
@@ -394,7 +394,7 @@ const Pager = forwardRef((props, ref) => {
   // change pages size and adjust current scroll position when browser window size is changing.
   const onResizeHandle = () => {
     if (!pagerRef.current || isAnimationRunning.current) return;
-    if (adjustPagesSizes) adjustHiddenPagesSize();
+    if (adjustPagesSize) adjustHiddenPagesSize();
     const isRtl = window.getComputedStyle(pagerRef.current).direction === 'rtl' && orientation !== 'vertical'; // check if pager wrapper element has right to left direction style only if the orientation prop is set to 'horizontal'.
     const page = currentPageRef.current;
     isResizing.current = true;
@@ -441,7 +441,7 @@ const Pager = forwardRef((props, ref) => {
         }
       );
       currentPageRef.current = page; // set the current page index to the new page index.
-      if (adjustPagesSizes) adjustHiddenPagesSize();
+      if (adjustPagesSize) adjustHiddenPagesSize();
 
       // swipe to the left, (right in case of direction is right to left (rtl) and the orientation prop is 'horizontal')
     } else if (
@@ -465,7 +465,7 @@ const Pager = forwardRef((props, ref) => {
         }
       );
       currentPageRef.current = page; // set the current page index to the new page index.
-      if (adjustPagesSizes) adjustHiddenPagesSize();
+      if (adjustPagesSize) adjustHiddenPagesSize();
 
       // not enough swipe, return to the current page.
     } else {
@@ -646,6 +646,8 @@ const Pager = forwardRef((props, ref) => {
       onTouchEnd={touchGestures ? onTouchEnd : null}
       onWheel={wheelScroll ? wheelHandle : null}
       onScroll={props.onPagerScroll ? onScrollHandle : null}
+      id={props.id}
+      className={props.className}
     >
       {children}
     </div>
