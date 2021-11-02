@@ -103,6 +103,15 @@ const Pager = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     if (onPageSelected && typeof onPageSelected !== 'function') console.error('react-js-pager: props.onPageSelected has invalid value.');
     if (onAnimation && typeof onAnimation !== 'function') console.error('react-js-pager: props.onAnimation has invalid value.');
     if (onNavigationStart && typeof onNavigationStart !== 'function') console.error('react-js-pager: props.onNavigationStart has invalid value.');
+    if (props.onPagerScroll && typeof props.onPagerScroll !== 'function') console.error('react-js-pager: props.onPagerScroll has invalid value.');
+    if (typeof adjustPagesSize !== 'boolean') console.error('react-js-pager: props.adjustPagesSize has invalid value.');
+    const allProps = new Set(['initialPage', 'orientation', 'touchGestures', 'wheelScroll', 'wheelScrollWithAnimation', 'animationStyle', 'perspective', 'duration', 'loop', 'showScrollbar', 'ease', 'onNavigationStart', 'onPageSelected', 'onAnimation', 'onPagerScroll', 'adjustPagesSize', 'wrapperStyle', 'id', 'className', 'children']);
+
+    for (const key in props) {
+      if (Object.hasOwnProperty.call(props, key)) {
+        if (!allProps.has(key)) console.error("react-js-pager: can't recognize props.".concat(key, " it's not a valid prop."));
+      }
+    }
   };
 
   checkTypes();

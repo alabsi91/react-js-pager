@@ -151,7 +151,7 @@ interface PagerProps {
      * - Check the documentation - `Limitation` section.
      * - **Default Value** `false`
      */
-    adjustPagesSizes?: Boolean
+    adjustPagesSize?: Boolean
 
     /**
      * - This callback will be called every time animation frame changes, including touch swipes.
