@@ -145,15 +145,6 @@ interface PagerProps {
     ease?: requestFrameEasing | Function
 
     /**
-     * - If you have pages with different widths/heights depends on the `orientation` this may cause unwanted extra space for the smaller pages.
-     * - Adjust unshowed pages width/height depends on the `orientation` to match page wrapper element width/height.
-     * - **Warning:** Don't use this if you have pages with specific widths/heights style, this method will overwirte theme.
-     * - Check the documentation - `Limitation` section.
-     * - **Default Value** `false`
-     */
-    adjustPagesSize?: Boolean
-
-    /**
      * - This callback will be called every time animation frame changes, including touch swipes.
      */
     onAnimation?: (event: onAnimationProps) => void
