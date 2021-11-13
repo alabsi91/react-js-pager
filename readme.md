@@ -8,12 +8,12 @@
 - React library to alows users to navigate through pages of data.
 - Best for creating tabs, image slider, fullPage scrolling and more.
 
-![](https://github.com/alabsi91/react-js-pager/blob/acc8280db39c4bf3c856d49168608cb17e0d1d22/tab.gif)
-![](https://github.com/alabsi91/react-js-pager/blob/fbe10303506cf981224d4c59c3254bf078e91710/next.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/acc8280db39c4bf3c856d49168608cb17e0d1d22/tab.gif?raw=true)
+![](https://github.com/alabsi91/react-js-pager/blob/fbe10303506cf981224d4c59c3254bf078e91710/next.gif?raw=true)
 
-![](https://github.com/alabsi91/react-js-pager/blob/7ee278d5ed09eed494c402146d8c125cd9f75f9f/fullpage.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/7ee278d5ed09eed494c402146d8c125cd9f75f9f/fullpage.gif?raw=true)
 
-![](https://github.com/alabsi91/react-js-pager/blob/c3319c05e7c7618d16808c94ec8ab4395c622099/slider2.gif)
+![](https://github.com/alabsi91/react-js-pager/blob/c3319c05e7c7618d16808c94ec8ab4395c622099/slider2.gif?raw=true)
 
 ## Installation
 
@@ -21,8 +21,7 @@
 
 ## Usage
 
-- For touch swipe stability, if you have a scrollable page make sure that the scrollbar shows on the Pager wrapper element not on
-  the HTML body.
+- **Note:** If you have pages with different heights, give them a style with `height: 100%` and `overflow: auto` to make sure that the scrollbar will show on the pages not on the pager wrapper element.
 
 ```jsx
 //...
@@ -143,16 +142,6 @@ function easeInQuad(x) {
 }
 ```
 
-### adjustPagesSize : _[Boolean] [optional]_
-
-- If you have pages with different `width` / `height` (depending on the `orientation` prop) this may causes unwanted extra space
-  for the smaller pages.
-- This method will adjust the unshowed (hidden) pages `width` / `height` (depending on the `orientation` prop) to match Pager
-  wrapper element `width` / `height`.
-- **Warning:** Don't use this if you have pages with specific `width` / `height` style, this method will overwrite them.
-- Check [Limitation](#limitation) section.
-- **Default Value** `false`
-
 ### onAnimation : _[ ( event: Object ) => void ] [optional]_
 
 - This callback will be called every time animation frame changes, including touch swipe/drag gestures.
@@ -212,21 +201,9 @@ function easeInQuad(x) {
 ### previous : ( withAnimation?: Boolean = true ) => void
 
 - Navigate to the previous page.
-- Takes a boolean param to enable/disable animation. 
+- Takes a boolean param to enable/disable animation.
 
 ### setPage : ( pageIndex: Number, withAnimation?: Boolean = true ) => void
 
 - Navigate to a specific page index.
 - Takes a number param (pageIndex) and a boolean param to enable/disable animation.
-
-## Limitation
-
-- The limitation only apply if you have different pages \*`dimensions` .
-- The \*`dimension` of the Pager wrapper element does not match the currently selected page \*`dimension`, it will match the
-  `highest` or `widest` page you have.
-- Even if you specify the Pager wrapper element \*`dimension` to be shorter than the `highest` or `widest` page, a scrollbar will
-  show up.
-- If necessary, you can workaround this by setting [adjustPagesSize](#adjustpagessize--boolean-optional) prop to `true`.
-- ( \* ) **dimension:** `height` in case of `horizontal` orientation, `width` in case of `vertical` orientation.
-
-![](https://github.com/alabsi91/react-js-pager/blob/c8c35cc4d038bff94c7957c93f6ac556f5c44265/limitation.jpg)
